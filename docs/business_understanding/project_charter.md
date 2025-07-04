@@ -2,11 +2,11 @@
 
 ## Nombre del Proyecto
 
-[Nombre del proyecto aquí]
+[Diagóstico de cumplimiento y riesgo]
 
 ## Objetivo del Proyecto
 
-[Descripción breve del objetivo del proyecto y por qué es importante]
+[Construir un diagnóstico de cumplimiento y riesgo que analiza las declaraciones tributarias (Renta, IVA, Retención) de un cliente, contrasta las alertas generadas con jurisprudencia y pronunciamientos oficiales, y responde a preguntas clave sobre plazos, consistencia de valores, saldos a favor y riesgos de fiscalización]
 
 ## Alcance del Proyecto
 
