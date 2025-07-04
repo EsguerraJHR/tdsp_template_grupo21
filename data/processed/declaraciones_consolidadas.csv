@@ -1,0 +1,4 @@
+fuente_pdf,ruta_completa,tamano_archivo_mb,fecha_procesamiento,nit,tipo_declaracion,año,periodo,casilla_24_ingresos_5pct,casilla_57_iva_descontable,valores_encontrados,valor_maximo,casillas_identificadas,longitud_texto,metodo_extraccion,calidad_extraccion
+Retefuente.pdf,data/raw/declaraciones_pdf/Retefuente.pdf,0.17,2025-07-03 23:40:58,,IVA,2023,2023-01,272829303132333435363738394041424344454647525354555657585960616263646667686970717273,91900014186984,19,272829303132333435363738394041424344454647525354555657585960616263646667686970717273,6,3010,Extracción_Directa_PDF,Alta
+iva.pdf,data/raw/declaraciones_pdf/iva.pdf,0.13,2025-07-03 23:40:58,,IVA,2023,2023-01,27282930313233343536383940414243,919000188936892023,26,27282930313233343536383940414243,12,4733,Extracción_Directa_PDF,Alta
+renta.pdf,data/raw/declaraciones_pdf/renta.pdf,0.53,2025-07-03 23:40:58,,IVA,2023,2023-01,910010074007342023,495051525354555657,35,910010074007342023,7,4191,Extracción_Directa_PDF,Alta
