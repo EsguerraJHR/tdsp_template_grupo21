@@ -2,7 +2,7 @@
 
 ## Nombre del Proyecto
 
-[Nombre del proyecto aquí]
+[Diagnóstico de cumplimiento y riesgo tributario]
 
 ## Objetivo del Proyecto
 
