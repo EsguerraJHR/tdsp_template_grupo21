@@ -3,3 +3,8 @@
 env_vars*
 credentials*
 **/build/*
+src/mlds6.egg-info/dependency_links.txt
+src/mlds6.egg-info/top_level.txt
+src/mlds6.egg-info/SOURCES.txt
+src/mlds6.egg-info/requires.txt
+src/mlds6.egg-info/PKG-INFO

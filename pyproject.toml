@@ -3,13 +3,17 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "nombre_paquete"
+name = "mlds6"
 version = "0.1.0"
-authors = [{name = "autor1", email = "correo@correo.com"}]
+authors = [
+    {name = "Nicolás Amado", email = "namadoa@unal.edu.co"},
+    {name = "Hernando Arana", email = "correo@correo.com"}, 
+    {name = "Diego Feliciano", email = "dfelicianor@unal.edu.co"}
+    ]
 description = "Descripción del proyecto"
 requires-python = ">3.8"
 dependencies = [
-    "numpy"
+    "numpy", "pandas", "matplotlib", "seaborn"
 ]
 
 [tool.setuptools.packages.find]
