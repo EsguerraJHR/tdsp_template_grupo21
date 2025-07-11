@@ -101,4 +101,3 @@ Por limitaciones de datos, no es posible graficar correlaciones ni ajustar model
 
 El presente reporte demuestra la estructura y potencial de análisis de los datos extraídos.  
 Sin embargo, debido al **volumen extremadamente limitado** de entradas disponibles (3 documentos), **no es posible realizar un análisis exploratorio estadístico representativo ni modelado predictivo**.  
-En su lugar, se recomienda generar o incorporar un conjunto de datos más amplio (real o sintético) que permita aplicar análisis y validaciones en fases posteriores del proyecto.
