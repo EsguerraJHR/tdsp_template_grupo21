@@ -7,7 +7,7 @@ name = "mlds6"
 version = "0.1.0"
 authors = [
     {name = "Nicolás Amado", email = "namadoa@unal.edu.co"},
-    {name = "Hernando Arana", email = "correo@correo.com"}, 
+    {name = "Hernando Castro", email = "correo@correo.com"}, 
     {name = "Diego Feliciano", email = "dfelicianor@unal.edu.co"}
     ]
 description = "Descripción del proyecto"
