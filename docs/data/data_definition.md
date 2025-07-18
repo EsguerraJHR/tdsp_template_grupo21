@@ -1,139 +1,93 @@
-# 📄 Definición de los Datos
+# Definición de Datos - Credit Card Fraud Detection
 
-## 🧭 Origen de los Datos
+## Descripción General del Dataset
 
-### Fuentes de datos principales
+El dataset contiene transacciones de tarjetas de crédito europeas realizadas en septiembre de 2013, donde se presentan transacciones fraudulentas y legítimas. Los datos han sido anonimizados para proteger la privacidad de los usuarios.
 
-El proyecto **Diagnóstico Tributario Inteligente** se apoya en tres fuentes principales:
+## Fuente de Datos
 
----
+- **Origen:** Transacciones reales de tarjetas de crédito europeas
+- **Período:** 03/05/2021
+- **Plataforma:** Kaggle - Credit Card Fraud Detection
+- **URL:** https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
 
-### 1. Datos Transaccionales
+## Estructura del Dataset
 
-Conjunto de declaraciones tributarias reales en formato PDF, correspondientes a personas jurídicas. Incluye:
+### Variables Originales
+- **Time:** Tiempo transcurrido entre cada transacción y la primera transacción del dataset (en segundos)
+- **Amount:** Monto de la transacción en euros
+- **Class:** Variable objetivo (0 = transacción legítima, 1 = transacción fraudulenta)
 
-- **Formulario 300** (Impuesto sobre las Ventas – IVA)
-- **Formulario 350** (Retención en la Fuente)
-- **Formulario 110** (Impuesto sobre la Renta)
+### Variables Transformadas - Componentes principales obtenidos mediante PCA (Principal Component Analysis)
+- **Propósito:** Preservar la privacidad de los datos originales
+- **Características:** Variables numéricas estandarizadas que capturan patrones complejos
 
-Estos formularios constituyen los insumos primarios para la detección de alertas tributarias, identificación de inconsistencias y evaluación de cumplimiento.
+## Características Técnicas
 
----
+### Dimensiones
+- **Filas:** 284,807
+- **Columnas:** 31 variables (28 transformadas + 2 originales + 1 objetivo)
 
-### 2. Base de Conocimiento Jurídico
+### Distribución de Clases
+- **Transacciones legítimas:** 284,315
+- **Transacciones fraudulentas:** 492
+- **Desbalance:** Extremo (ratio 1:577) 
 
-Repositorio de conocimiento jurídico-tributario estructurado en archivos Markdown, que incluye:
+### Calidad de Datos
+- **Valores faltantes:** 0
+- **Duplicados**: 0
+- **0utliers:** Presentes en la variable Amount
+- **Consistencia:** Excelente
 
-- Jurisprudencia relevante
-- Conceptos y pronunciamientos oficiales de la DIAN
-- Extractos seleccionados de normativa tributaria
+## Preprocesamiento Aplicado
 
-Esta base curada actúa como **fuente de verdad** para el agente de razonamiento, permitiendo explicar alertas y respaldarlas con normatividad vigente.
+### 1 División de Datos
+- **Train set:** 80 de los datos (227,845 transacciones)
+- **Test set:** 20% de los datos (56,962 transacciones)
+- **Estratificación:** Mantiene la proporción de clases en ambos sets
 
----
+### 2. Estandarización
+- **Método:** StandardScaler (Z-score normalization)
+- **Aplicado a:** Todas las variables numéricas
+- **Propósito:** Normalizar las escalas para algoritmos de ML
 
-### 3. Lógica de Negocio
+### 3. Balanceo de Clases
+- **Método:** SMOTE (Synthetic Minority Over-sampling Technique)
+- **Aplicado a:** Solo el set de entrenamiento
+- **Resultado:** Clases balanceadas para evitar sesgo en el modelo
 
-Plantillas de validación en formato Excel que contienen:
+## Variables Más Importantes
 
-- Reglas de negocio codificadas (e.g. plazos, cruces, saldos)
-- Checklists tributarios
-- Casos de referencia
+### Top 5 Variables por Correlación con Fraude
+1. **V17:** Correlación = 0.3265 (más importante)
+2. **V14:** Correlación = 0.3253 
+3. **V12:** Correlación = 0.2664
+4. **V10:** Correlación = 0.21695
+5. **V16:** Correlación = 00.1965
 
-Estas plantillas definen las validaciones clave que el motor del sistema debe replicar para emitir alertas y priorizar hallazgos.
+## Consideraciones para el Modelado
 
----
+### Desafíos
+1. **Desbalance extremo:** Requiere técnicas especiales de sampling
+2. **Variables anónimas:** Limitación en interpretabilidad
+3. **Outliers:** Presentes en montos de transacciones
 
-## ⚙️ Método de Obtención
+### Ventajas
+1. **Datos limpios:** Sin valores faltantes o duplicados
+2. **Variables transformadas:** Optimizadas para ML.
+3. **Dataset real:** Representativo de casos reales de fraude
 
-Los datos se extraen a través de un pipeline propio de procesamiento de PDFs implementado en Python. Actualmente se utilizan las librerías:
+## Archivos Generados
 
-- `pdfplumber`
-- `PyMuPDF`
-- `re` (expresiones regulares)
+### Datos Procesados
+- `X_train_balanced.csv`: Features de entrenamiento balanceadas
+- `y_train_balanced.csv`: Target de entrenamiento balanceado
+- `X_test_scaled.csv`: Features de test estandarizadas
+- `y_test.csv`: Target de test original
+- `scaler.pkl`: Modelo de estandarización guardado
 
-El extractor transforma los formularios en texto estructurado y lo convierte en registros tabulares.  
-Aunque en etapas futuras se contempla el uso de modelos como **SmolDocling** para formularios más complejos, esta integración aún no ha sido implementada.
-
----
-
-## 📜 Especificación de Scripts para la Carga de Datos
-
-### Script principal de adquisición
-
-- **Archivo**: `scripts/data_acquisition/main.py`  
-- **Función**: Procesa automáticamente todos los archivos PDF de declaraciones tributarias
-
-### Módulo de procesamiento
-
-- **Ubicación**: `src/diagnostico_tributario/procesador.py`  
-- **Función clave**: `procesar_un_pdf()` – Extrae texto y datos estructurados de cada formulario.
-
----
-
-## 🔄 Pipeline de Procesamiento
-
-El flujo implementado consta de las siguientes etapas:
-
-1. **Extracción de texto**: Conversión del PDF a texto plano estructurado
-2. **Análisis tributario**: Identificación de tipo de formulario, NIT, período, y valores monetarios clave
-3. **Consolidación**: Generación de un único dataset estructurado en formato CSV
-4. **Validación**: Revisión de la calidad de extracción y presencia de campos clave
-
----
-
-## 📁 Rutas y Archivos
-
-### Ubicación de los archivos de origen
-   data/raw/declaraciones_pdf/
-   ├── iva.pdf          # Formulario 300 - IVA
-   ├── renta.pdf        # Formulario 110 - Renta
-   └── Retefuente.pdf   # Formulario 350 - Retefuente
-
-- **Formato**: PDF con texto seleccionable
-- **Contenido**: Formularios oficiales de la DIAN diligenciados
-- **Tamaño promedio**: 3.000–5.000 caracteres por archivo
-
----
-
-## 🔧 Transformación y Limpieza
-
-- **Extracción de texto**: Uso de múltiples librerías para mayor compatibilidad
-- **Análisis estructural**: Identificación automática de patrones tributarios (e.g. ingresos, retenciones)
-- **Validación de calidad**: Comprobación de completitud y coherencia de datos
-- **Estandarización**: Conversión a formatos uniformes para fechas, montos y códigos
-- **Consolidación**: Unión de todos los formularios en un único archivo CSV
-- **Enriquecimiento**: Cálculo de métricas como número de valores detectados, longitud de texto y calidad de extracción
-
----
-
-## 📦 Base de Datos de Destino
-
-- **Ruta de salida**: `data/processed/declaraciones_consolidadas.csv`
-- **Formato**: CSV con ~16 columnas estructuradas
-
-### Principales campos:
-
-- Metadatos del archivo: nombre, ruta, tamaño, fecha
-- Datos clave: NIT, tipo de declaración, año, período
-- Valores monetarios extraídos
-- Métricas de extracción: longitud del texto, valores identificados, calidad
-
----
-
-## 🎯 Criterios de Calidad Esperados
-
-Dado el carácter prototípico del sistema y la disponibilidad actual de datos reales (solo tres formularios), el objetivo principal es **validar la estructura, consistencia y funcionamiento del flujo de extracción**.
-
-Los criterios definidos para futuras fases incluyen:
-
-- **Precisión esperada de extracción**: ≥ 95% en campos numéricos clave
-- **Cobertura mínima de reglas de validación**: 15 reglas, una vez el sistema se escale a datos reales o sintéticos
-- **Tiempo de procesamiento por archivo**: Menor a 3 minutos
-
----
-
-## ⚠️ Nota Importante
-
-Actualmente, el dataset incluye **únicamente tres archivos reales** (uno por tipo de declaración). Por tanto, **no es posible realizar análisis exploratorio ni validar métricas de desempeño generalizables**.  
-Esta fase se enfoca en demostrar la viabilidad técnica, la modularidad del sistema y la preparación para escalar en futuras etapas con más datos.
+### Documentación
+- `data_dictionary.md`: Diccionario detallado de variables
+- `data_summary.md`: Resumen estadístico y análisis
+- `data_report.md`: Reporte exploratorio completo
+- `creditcard_profile_report.html`: Reporte interactivo con ydata-profiling

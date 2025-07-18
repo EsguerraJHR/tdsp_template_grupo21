@@ -1,0 +1,2 @@
+# This file ensures the outputs/figures directory is tracked by Git
+# Large image files in this directory are ignored by .gitignore 

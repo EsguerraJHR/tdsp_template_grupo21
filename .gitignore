@@ -3,8 +3,33 @@
 env_vars*
 credentials*
 **/build/*
-src/mlds6.egg-info/dependency_links.txt
-src/mlds6.egg-info/top_level.txt
-src/mlds6.egg-info/SOURCES.txt
-src/mlds6.egg-info/requires.txt
-src/mlds6.egg-info/PKG-INFO
+
+# Data files (too large for GitHub)
+data/raw/*.csv
+data/processed/*.csv
+data/processed/*.pkl
+
+# Keep small configuration files
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/results/.gitkeep
+
+# Model files (large binary files)
+*.joblib
+*.h5
+*.hdf5
+*.pth
+*.pt
+
+# Large output files only
+outputs/*.csv
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

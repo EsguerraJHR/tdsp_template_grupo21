@@ -1,103 +1,87 @@
-# 📊 Reporte de Datos
+# Resumen de Datos - Credit Card Fraud Detection
 
-Este documento presenta un análisis exploratorio limitado de los datos disponibles, correspondiente a la etapa inicial del proyecto **Diagnóstico Tributario Inteligente**. Dado que el volumen actual de datos es reducido (tres formularios tributarios en PDF), este reporte tiene carácter **estructural y demostrativo**.
+## Información General del Dataset
 
----
+- **Total de transacciones:** 284807
+- **Transacciones fraudulentas:** 492
+- **Transacciones legítimas:** 284315
+- **Número de variables:** 31
+- **Variables numéricas:** 31
 
-## 📌 Resumen general de los datos
+## Calidad de los Datos
 
-- **Cantidad de observaciones**: 3 formularios (1 IVA, 1 Renta, 1 Retefuente)
-- **Cantidad de variables estructuradas extraídas**: 16 columnas (metadatos, campos tributarios, métricas de extracción)
-- **Tipo de variables**:  
-  - Categóricas: tipo_declaracion, fuente_pdf, metodo_extraccion  
-  - Numéricas: valor_maximo, valores_encontrados, saldo_a_pagar_o_favor  
-  - Temporales: fecha_procesamiento, período  
-- **Valores faltantes**: No se presentan valores nulos en esta etapa, pero algunas casillas no están presentes en todos los formularios debido a su naturaleza (e.g. el campo `iva_descontable` no existe en el formulario de Renta).
-- **Distribución de los tipos de declaración**:
-  - IVA: 1
-  - Renta: 1
-  - Retefuente: 1
+- **Valores faltantes:** 0
+- **Registros duplicados:** 0
+- **Outliers en Amount:** 9620.29
 
----
+## Características del Dataset
 
-## 🧪 Resumen de calidad de los datos
+- **Desbalance severo:** El dataset presenta un desbalance extremo con solo0.17% de transacciones fraudulentas
+- **Variables anónimas:** 28 variables han sido transformadas usando PCA para preservar la privacidad
+- **Variables originales:** Time (tiempo desde la primera transacción) y Amount (monto de la transacción)
+- **Variable objetivo:** Class (0o Fraude, 1=Fraude)
 
-- **Valores faltantes**:  
-  - Variables como `retenciones_practicadas` o `iva_descontable` están ausentes en los formularios donde no aplican.
-- **Valores extremos**:  
-  - Se detectó un valor de `$850,000,000` en ingresos brutos (Renta), dentro de un rango razonable para personas jurídicas.
-- **Errores detectados**:  
-  - Ninguno estructural; sin embargo, el volumen actual no permite evaluar errores típicos.
-- **Duplicados**:  
-  - No se presentan formularios repetidos.
-- **Acciones tomadas**:  
-  - Validación manual de extracción campo a campo.
-  - Conversión de valores monetarios a tipo numérico flotante.
-  - Normalización de fechas y rutas de archivo.
+## Variables Más Importantes
 
----
+### Top 10 variables con mayor correlación absoluta con la variable objetivo:
 
-## 🎯 Variable objetivo
+- **V17:** 0.3265
+- **V14:** 0.3025
+- **V12:** 0.2606
+- **V10:** 0.2169
+- **V16:** 00.1965
+- **V3:** 00.1789
+- **V7:** 0.1608
+- **V11:** 00.1549
+- **V4:** 0.1334
+- **V18:** 00.1114
 
-Dado que este proyecto no tiene como objetivo principal una predicción cuantitativa, **la variable objetivo se asocia conceptualmente al campo `alertas_generadas`**, es decir, el número de inconsistencias o riesgos detectados por el sistema.
+# Insights Principales
 
-- **Distribución actual**:  
-  - No se ha generado un conjunto de alertas aún, por lo que no se cuenta con valores reales.
-  - En versiones futuras, esta variable puede ser binaria (riesgo/no riesgo) o continua (número de alertas).
+### 1. Desbalance de Clases
+- El dataset presenta un desbalance extremo que requerirá técnicas especiales de sampling
+- Las métricas de evaluación deberán considerar precision, recall y F1-score
+- Es crucial evitar el overfitting a la clase mayoritaria
 
----
+### 2. Distribución de Montos
+- La mayoría de las transacciones tienen montos bajos (mediana: €22.00)
+- Existen outliers significativos en la variable Amount
+- Las transacciones fraudulentas tienden a tener montos diferentes a las legítimas
+- El 75 las transacciones tienen montos menores a €77.16
 
-## 🔍 Variables individuales
+### 3. Variables Transformadas
+- Las28riables V1-V28n resultado de PCA, manteniendo la privacidad
+- Estas variables capturan patrones complejos en los datos originales
+- Algunas variables muestran correlaciones significativas con el fraude
+- Las variables V17, V14 y V12 son las más importantes para detectar fraude
 
-### Ejemplos:
+### 4. Calidad de Datos
+- No hay valores faltantes en el dataset
+- No hay registros duplicados
+- Los datos están bien estructurados y listos para el modelado
+- La variable Time muestra la secuencia temporal de las transacciones
 
-- **`valor_maximo`**
-  - Tipo: numérico continuo
-  - Descripción: mayor valor monetario detectado en el texto del formulario.
-  - Rango observado: $13,000,000 – $850,000,000
-  - Transformaciones: escalar a miles/millones para visualización.
+## Recomendaciones para el Modelado
 
-- **`tipo_declaracion`**
-  - Tipo: categórica nominal
-  - Valores: `IVA`, `RENTA`, `RETEFUENTE`
-  - Frecuencia: 1 por cada tipo
-  - Observación: en futuros análisis, podría usarse como variable de segmentación.
+1. **Técnicas de Sampling:** Usar SMOTE, undersampling o técnicas de ensemble para manejar el desbalance
+2. **Métricas de Evaluación:** Priorizar recall sobre accuracy debido al desbalance
+3. **Feature Engineering:** Considerar crear features basadas en Amount y Time
+4. **Validación:** Usar stratified k-fold cross-validation
+5 **Algoritmos:** Probar Random Forest, XGBoost, y técnicas de ensemble
+6. **Preprocesamiento:** Estandarizar las variables numéricas
+7. **Selección de Features:** Usar las variables V17, V14, V12, V10, V16 como prioritarias
 
-- **`calidad_extraccion`**
-  - Tipo: ordinal
-  - Valores esperados: `Alta`, `Media`, `Baja`
-  - Distribución actual: todos los casos reportan `Alta` por haber sido seleccionados manualmente.
+## Reporte Detallado
 
----
+Para un análisis exploratorio completo e interactivo, consulta el reporte HTML generado:
+[Credit Card Fraud Detection - Data Profile](../../outputs/creditcard_profile_report.html)
 
-## 🧮 Ranking de variables
-
-Dado que aún no se ha construido un modelo predictivo ni se cuenta con suficientes observaciones, no se presenta ranking de importancia. Sin embargo, variables candidatas relevantes para un modelo futuro incluyen:
-
-- `saldo_a_pagar_o_favor`
-- `iva_descontable`
-- `retenciones_practicadas`
-- `valor_maximo`
-- `tipo_declaracion`
-
-Cuando el sistema cuente con datos anotados y múltiples formularios por contribuyente, se podrán aplicar:
-- **Correlación** con `alertas_generadas`
-- **Feature importance** vía modelos de árbol
-- **PCA** para reducción dimensional
-
----
-
-## 🔗 Relación entre variables explicativas y variable objetivo
-
-Por limitaciones de datos, no es posible graficar correlaciones ni ajustar modelos lineales en esta etapa. No obstante, se contempla lo siguiente para fases posteriores:
-
-- **Matriz de correlación** entre valores monetarios y cantidad de alertas
-- **Modelos de regresión o clasificación** para estimar riesgo tributario
-- **Visualización** mediante gráficos de dispersión y boxplots por tipo de formulario
-
----
-
-## Anotaciones
-
-El presente reporte demuestra la estructura y potencial de análisis de los datos extraídos.  
-Sin embargo, debido al **volumen extremadamente limitado** de entradas disponibles (3 documentos), **no es posible realizar un análisis exploratorio estadístico representativo ni modelado predictivo**.  
+Este reporte incluye:
+- Análisis detallado de cada variable
+- Matriz de correlación interactiva
+- Distribuciones y estadísticas descriptivas
+- Alertas de calidad de datos
+- Recomendaciones automáticas
+- Análisis de outliers y valores extremos
+- Comparaciones entre clases
+- Insights automáticos sobre patrones en los datos
