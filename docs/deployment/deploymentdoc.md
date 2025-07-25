@@ -36,6 +36,7 @@ graph TD
   API -->|Usa modelo y scaler| Modelo[Modelo .joblib + scaler.pkl]
   Modelo -->|Devuelve resultado| API
   API -->|Devuelve JSON| User
+  ```
 
 ### Código de despliegue
 
