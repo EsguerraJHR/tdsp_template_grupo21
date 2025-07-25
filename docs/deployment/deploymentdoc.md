@@ -27,24 +27,6 @@ Hugging Face Spaces
     * Cifrado de datos sensibles (TLS, HTTPS)
 
 ### Diagrama de arquitectura:
-+--------------------+
-|  Usuario final     |
-|  (navegador o app) |
-+--------------------+
-          |
-          v
-+--------------------------+
-|  Hugging Face Space      |
-|  (fraud-api container)   |
-|                          |
-|  +--------------------+  |
-|  |  FastAPI app       |  |
-|  |  - app.py          |  |
-|  |  - model.joblib    |  |
-|  |  - scaler.pkl      |  |
-|  |  - Dockerfile      |  |
-|  +--------------------+  |
-+--------------------------+
 
 Mermaid: 
 ```mermaid
