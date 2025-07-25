@@ -20,6 +20,9 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 import warnings
+
+import joblib
+
 warnings.filterwarnings('ignore')
 
 plt.style.use('seaborn-v0_8')
@@ -270,6 +273,15 @@ def generate_classification_reports(results, y_test):
                 f.write(f"\nAUC Score: {result['auc']:.4f}\n")
     print("\nReportes de clasificación guardados en classification_reports.txt")
 
+def save_best_model(results, output_path='scripts/deployment/best_model.joblib'):
+    """
+    Guarda el mejor modelo (según F1 en test) usando joblib
+    """
+    best_model_name = max(results, key=lambda name: results[name]['f1'])
+    best_model = results[best_model_name]['model']
+    joblib.dump(best_model, output_path)
+    print(f"\n✅ Modelo '{best_model_name}' guardado en {output_path}")
+
 def main():
     print("=== FASE 3 MODELADO Y EXTRACCIÓN DE CARACTERÍSTICAS ===\n")
     print("Usando 10% del dataset para evitar problemas de memoria...")
@@ -286,6 +298,7 @@ def main():
     print("\nGuardando resultados...")
     save_results_to_csv(results)
     generate_classification_reports(results, y_test)
+    save_best_model(results)
     print(f"Todos los resultados guardados en {RESULTS_DIR}/")
     print("Gráficas generadas:")
     print("  - confusion_matrices.png")

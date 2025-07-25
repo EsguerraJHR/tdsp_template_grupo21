@@ -1,0 +1,6 @@
+sdk: docker
+title: Fraud Detection API
+emoji: 🛡️
+colorFrom: green
+colorTo: blue
+app_port: 7860
