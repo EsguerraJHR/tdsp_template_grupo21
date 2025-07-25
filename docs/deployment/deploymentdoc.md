@@ -1,22 +1,112 @@
-# Despliegue de modelos
-
 ## Infraestructura
 
-- **Nombre del modelo:** (nombre que se le ha dado al modelo)
-- **Plataforma de despliegue:** (plataforma donde se va a desplegar el modelo)
-- **Requisitos técnicos:** (lista de requisitos técnicos necesarios para el despliegue, como versión de Python, bibliotecas de terceros, hardware, etc.)
-- **Requisitos de seguridad:** (lista de requisitos de seguridad necesarios para el despliegue, como autenticación, encriptación de datos, etc.)
-- **Diagrama de arquitectura:** (imagen que muestra la arquitectura del sistema que se utilizará para desplegar el modelo)
+### Nombre del modelo: fraud-detection-model
 
-## Código de despliegue
+### Plataforma de despliegue: Hugging Face Spaces
 
-- **Archivo principal:** (nombre del archivo principal que contiene el código de despliegue)
-- **Rutas de acceso a los archivos:** (lista de rutas de acceso a los archivos necesarios para el despliegue)
-- **Variables de entorno:** (lista de variables de entorno necesarias para el despliegue)
+### Requisitos técnicos:
+•	Lenguaje: Python 3.11 (desarrollo), Python 3.9 (despliegue en Hugging Face)
+•	Bibliotecas:
+	•	fastapi
+	•	uvicorn
+	•	scikit-learn
+	•	joblib
+	•	imbalanced-learn (SMOTE)
+	•	pandas
+	•	gdown (para descarga de datasets)
+•	Hardware:
+	•	Requisitos mínimos del runtime de Hugging Face (CPU)
 
-## Documentación del despliegue
+### Requisitos de seguridad:
+	•	El entorno de Hugging Face Spaces se ejecuta de forma aislada (sandboxed)
+	•	No se implementó autenticación o cifrado ya que la API es de uso libre para pruebas
+	•	Para producción se recomienda agregar:
+	•	Autenticación con tokens o OAuth2
+	•	Cifrado de datos sensibles (TLS, HTTPS)
 
-- **Instrucciones de instalación:** (instrucciones detalladas para instalar el modelo en la plataforma de despliegue)
-- **Instrucciones de configuración:** (instrucciones detalladas para configurar el modelo en la plataforma de despliegue)
-- **Instrucciones de uso:** (instrucciones detalladas para utilizar el modelo en la plataforma de despliegue)
-- **Instrucciones de mantenimiento:** (instrucciones detalladas para mantener el modelo en la plataforma de despliegue)
+### Diagrama de arquitectura:
++--------------------+
+|  Usuario final     |
+|  (navegador o app) |
++--------------------+
+          |
+          v
++--------------------------+
+|  Hugging Face Space      |
+|  (fraud-api container)   |
+|                          |
+|  +--------------------+  |
+|  |  FastAPI app       |  |
+|  |  - app.py          |  |
+|  |  - model.joblib    |  |
+|  |  - scaler.pkl      |  |
+|  |  - Dockerfile      |  |
+|  +--------------------+  |
++--------------------------+
+
+Mermaid: 
+```mermaid
+graph TD
+    user[Usuario final<br/>(navegador o app)] --> HF[Hugging Face Space<br/>Docker container]
+    HF --> App[FastAPI app<br/>con model.joblib y scaler.pkl]
+```
+
+### Código de despliegue
+
+Archivo principal: app.py
+
+Rutas de acceso a los archivos:
+	•	app.py → contiene la definición de la API con FastAPI
+	•	model.joblib → modelo entrenado y serializado
+	•	scaler.pkl → objeto StandardScaler para normalizar los datos
+	•	requirements.txt → dependencias del proyecto
+	•	Dockerfile → define el contenedor de despliegue
+
+### Variables de entorno:
+Actualmente no se utilizan variables de entorno explícitas. Para producción se recomienda:
+	•	MODEL_PATH=model.joblib
+	•	SCALER_PATH=scaler.pkl
+	•	PORT=7860
+
+### Documentación del despliegue
+
+Instrucciones de instalación:
+	1.	Subir los archivos del folder scripts/deployment al Space de Hugging Face
+	2.	Asegurarse de que exista el archivo Dockerfile en la raíz (con ese nombre exactamente)
+	3.	Verificar que el archivo principal se llame app.py y contenga app = FastAPI()
+	4.	Hugging Face construirá automáticamente el contenedor al detectar el Dockerfile
+
+### Instrucciones de configuración:
+	•	No se requiere configuración adicional
+	•	Para customizar el puerto o nombre del archivo principal, modificar el CMD en el Dockerfile
+
+### Instrucciones de uso:
+    •	Acceder a la API en: https://mlds6-ftp-fraud-api.hf.space
+	•	Usar /predict enviando un JSON con la siguiente estructura:
+
+{
+  "features": [valor1, valor2, ..., valorN]
+}
+
+Un ejemplo de petición sería el siguiente 
+```
+curl -X POST https://mlds6-ftp-fraud-api.hf.space/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "features": [472, -3.0435406239976, -3.15730712090228, 1.08846277997285, 2.2886436183814, 1.35980512966107, -1.06482252298131, 0.325574266158614, -0.0677936531906277, -0.270952836226548, -0.838586564582682, -0.414575448285725, -0.503140859566824, 0.676501544635863, -1.69202893305906, 2.00063483909015, 0.666779695901966, 0.599717413841732, 1.72532100745514, 0.283344830149495, 2.10233879259444, 0.661695924845707, 0.435477208966341, 1.37596574254306, -0.293803152734021, 0.279798031841214, -0.145361714815161, -0.252773122530705, 0.0357642251788156, 529]
+  }'
+```
+
+Y su respuesta puede ser bien 0 o 1, cómo en el siguiente fragmento de respuesta:
+```
+{"prediction":0}
+```
+Donde 0 es transacción legítima y 1 es transacción fraudulenta.
+
+
+	•	Ver la documentación interactiva en [/docs](https://mlds6-ftp-fraud-api.hf.space/docs)
+
+Instrucciones de mantenimiento:
+	•	Para actualizar el modelo: subir una nueva versión de model.joblib y reiniciar el Space
+	•	Para agregar validación o autenticación: editar app.py y rehacer el build
+	•	Para mantenimiento general: usar el panel de administración de Hugging Face Spaces (reinicio, logs, etc.)

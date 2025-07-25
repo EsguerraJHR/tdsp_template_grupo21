@@ -1,12 +1,18 @@
-FROM python:3.11-slim
+FROM python:3.9
+
+# Crear usuario seguro
+RUN useradd -m -u 1000 user
+USER user
+ENV PATH="/home/user/.local/bin:$PATH"
 
 WORKDIR /app
 
-# Copiar todo el contenido de deployment/
-COPY . .
-
 # Instalar dependencias
-RUN pip install --no-cache-dir -r requirements.txt
+COPY --chown=user requirements.txt requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Ejecutar FastAPI desde api.py
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "7860"]
+# Copiar el resto del código
+COPY --chown=user . /app
+
+# Ejecutar FastAPI desde app.py
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
