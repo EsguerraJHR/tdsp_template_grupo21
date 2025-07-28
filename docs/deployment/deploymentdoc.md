@@ -58,10 +58,10 @@ Actualmente no se utilizan variables de entorno explícitas. Para producción se
 ### Documentación del despliegue
 
 Instrucciones de instalación:
-	1.	Subir los archivos del folder scripts/deployment al Space de Hugging Face
-	2.	Asegurarse de que exista el archivo Dockerfile en la raíz (con ese nombre exactamente)
-	3.	Verificar que el archivo principal se llame app.py y contenga app = FastAPI()
-	4.	Hugging Face construirá automáticamente el contenedor al detectar el Dockerfile
+* Subir los archivos del folder scripts/deployment al Space de Hugging Face
+* Asegurarse de que exista el archivo Dockerfile en la raíz (con ese nombre exactamente)
+* Verificar que el archivo principal se llame app.py y contenga app = FastAPI()
+* Hugging Face construirá automáticamente el contenedor al detectar el Dockerfile
 
 ### Instrucciones de configuración:
 * No se requiere configuración adicional
@@ -92,7 +92,22 @@ Donde 0 es transacción legítima y 1 es transacción fraudulenta.
 
 * Ver la documentación interactiva en [/docs](https://mlds6-ftp-fraud-api.hf.space/docs)
 
-Instrucciones de mantenimiento:
+### Costos de infraestructura
+
+La ejecución del modelo se realiza en la infraestructura gratuita de Hugging Face Spaces, utilizando hardware compartido (CPU). Este entorno es ideal para aplicaciones ligeras como esta API de detección de fraude, ya que no requiere procesamiento intensivo. Hugging Face permite escalar fácilmente a opciones de pago en caso de necesitar GPU u otros recursos adicionales.
+En la siguiente imagen se detallan los costos asociados al uso del hardware según el plan seleccionado:
+
+<image src=./costohardware.png></image>
+
+### Costos de almacenamiento y persistencia
+
+El modelo (model.joblib) y el objeto de escalado (scaler.pkl) se almacenan directamente en el repositorio del Space. Hugging Face proporciona almacenamiento gratuito con un límite de hasta 5 GB por espacio, lo cual resulta más que suficiente para este proyecto.
+No se requiere una base de datos ni almacenamiento externo, ya que todo el procesamiento es in-memory.
+En esta imagen se describen los costos relacionados con el almacenamiento y la persistencia en Hugging Face:
+
+<image src=./costopersistencia.png></image>
+
+### Instrucciones de mantenimiento:
 * Para actualizar el modelo: subir una nueva versión de model.joblib y reiniciar el Space
 * Para agregar validación o autenticación: editar app.py y rehacer el build
 * Para mantenimiento general: usar el panel de administración de Hugging Face Spaces (reinicio, logs, etc.)
