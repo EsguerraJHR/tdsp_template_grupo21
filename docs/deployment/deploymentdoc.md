@@ -95,6 +95,7 @@ Donde 0 es transacción legítima y 1 es transacción fraudulenta.
 ### Costos de infraestructura
 
 La ejecución del modelo se realiza en la infraestructura gratuita de Hugging Face Spaces, utilizando hardware compartido (CPU). Este entorno es ideal para aplicaciones ligeras como esta API de detección de fraude, ya que no requiere procesamiento intensivo. Hugging Face permite escalar fácilmente a opciones de pago en caso de necesitar GPU u otros recursos adicionales.
+
 En la siguiente imagen se detallan los costos asociados al uso del hardware según el plan seleccionado:
 
 <image src=./costohardware.png></image>
@@ -103,6 +104,7 @@ En la siguiente imagen se detallan los costos asociados al uso del hardware seg�
 
 El modelo (model.joblib) y el objeto de escalado (scaler.pkl) se almacenan directamente en el repositorio del Space. Hugging Face proporciona almacenamiento gratuito con un límite de hasta 5 GB por espacio, lo cual resulta más que suficiente para este proyecto.
 No se requiere una base de datos ni almacenamiento externo, ya que todo el procesamiento es in-memory.
+
 En esta imagen se describen los costos relacionados con el almacenamiento y la persistencia en Hugging Face:
 
 <image src=./costopersistencia.png></image>
